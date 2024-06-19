@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "dagster-instance"
+version = "0.1.0"
+description = ""
+authors = ["Phil Patterson <philip.james.patterson@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+dagster = "^1.7.10"
+dagster-postgres = "^0.23.10"
+dagster-duckdb = "^0.23.10"
+dagster-duckdb-polars = "^0.23.10"
+duckdb = "^1.0.0"
+dagster-graphql = "^1.7.10"
+dagster-celery-docker = "^0.23.10"
+dagster-webserver = "^1.7.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

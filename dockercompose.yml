@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  dagster_webserver:
+    image: dagster
+    container_name: dagster_webserver
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    entrypoint:
+      - dagster-webserver
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "3000"
+      - --workspace
+      - workspace.yml
+    environment:
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DAGSTER_POSTGRES_CONN_STR=${POSTGRES_CONN_STR}
+      - DAGSTER_POSTGRES_DB=personal_finance
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    working_dir: /opt/personal_finance_dashboard
+    networks:
+      - dagster_network
+    depends_on:
+      - dagster_postgres
+      - pipeline_personal_finance
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  dagster_daemon:
+    image: dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster_daemon
+    restart: on-failure
+    environment:
+      - DAGSTER_POSTGRES_USER=${POSTGRES_USER}
+      - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DAGSTER_POSTGRES_CONN_STR=${POSTGRES_CONN_STR}
+      - DAGSTER_POSTGRES_DB=personal_finance
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - dagster_network
+    depends_on:
+      - dagster_postgres
+      - pipeline_personal_finance
+
+  pipeline_personal_finance:
+    container_name: pipeline_personal_finance
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DAGSTER_HOME=/opt/personal_finance_dashboard/dagster_finance
+      - DBT_PROJECT_DIR=/opt/personal_finance_dashboard/dbt_finance
+      - DAGSTER_DBT_PARSE_PROJECT_ON_LOAD=1
+    volumes:
+      - .:/opt/personal_finance_dashboard 
+    working_dir: /opt/personal_finance_dashboard
+    ports:
+      - "4000:4000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  dagster_postgres:
+    image: postgres:16
+    shm_size: 128mb
+    restart: always
+    container_name: dagster_postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=personal_finance
+      - PUID=${USER_ID}
+      - PGID=${GRP_ID}
+      - TZ=${TIMEZONE}
+    ports:
+      - "5000:5432"
+    volumes:
+      - /docker/appdata/postgres:/var/lib/postgresql/data
+    networks:
+      - dagster_network
+
+networks:
+  dagster_network:
+    driver: bridge
+    name: dagster_network
