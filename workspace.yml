@@ -1,9 +1,9 @@
 load_from:
   # Each entry here corresponds to a service in the docker-compose file that exposes user code.
-  - server:
-      host: personal_finance
+  - grpc_server:
+      host: pipeline_personal_finance
       port: 4000
-      location_name: "pipeline-personal_finance"
+      location_name: "pipeline_personal_finance"
   # - server:
   #     host: pipeline_y
   #     port: 4047
