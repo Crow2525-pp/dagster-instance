@@ -27,6 +27,8 @@ services:
     depends_on:
       - dagster_postgres
       - pipeline_personal_finance
+    expose:
+      - "3000"
     ports:
       - "3000:3000"
     logging:
@@ -60,16 +62,20 @@ services:
 
   pipeline_personal_finance:
     container_name: pipeline_personal_finance
-    restart: always
     build:
       context: ./pipeline_personal_finance
       dockerfile: dockerfile
     environment:
-      - DAGSTER_HOME=/docker/appdata/dagster/dagster_home
+      USER_ID: 1000
+      GRP_ID: 1000
+      TIMEZONE: Australia/Melbourne
+      DAGSTER_HOME: /docker/appdata/dagster/dagster_home
+      DAGSTER_POSTGRES_USER: postgres
+      DAGSTER_POSTGRES_PASSWORD: test
+      DAGSTER_POSTGRES_IP: postgres
+      DAGSTER_POSTGRES_PORT: 5432
     volumes:
       - .:/docker/appdata/dagster/pipeline_personal_finance
-    ports:
-      - "4000:4000"
     networks:
       - dagster_network
     logging:

@@ -1,12 +1,16 @@
 import os
 
 from dagster import Definitions, EnvVar
+from dotenv import load_dotenv
+
 
 from .resources import SqlAlchemyClientResource
 
 # from dagster_duckdb import DuckDBResource
 
 from .assets import upload_dataframe_to_database
+
+load_dotenv()
 
 # from .constants import DBT_PROJECT_DIR
 
@@ -25,7 +29,7 @@ resources = {
                     username=EnvVar("POSTGRES_USERNAME"),
                     password=EnvVar("POSTGRES_PASSWORD"),
                     host=EnvVar("POSTGRES_HOST"),
-                    port=int(os.getenv("POSTGRES_PORT")),
+                    port=int(os.environ.get("POSTGRES_PORT")),
                     database=EnvVar("POSTGRES_DB"),
                 )
             )

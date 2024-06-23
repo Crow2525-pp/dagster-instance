@@ -7,11 +7,21 @@ WORKDIR /docker/appdata/dagster/pipeline_personal_finance
 # Copy the current directory contents into the container at the specified directory
 COPY . .
 
+# Set correct permissions for files
+RUN chmod 644 *.py *.txt .env dockerfile && \
+    chmod 755 .  # Set directory permission
+
 # Install the required dependencies
 RUN pip install -r requirements.txt
 
 # Expose the port that Dagster gRPC server uses
 EXPOSE 4000
 
+WORKDIR /docker/appdata/dagster
+
+# Move the .env file from the current directory to the parent directory
+RUN mv pipeline_personal_finance/.env .
+
 # Command to run the Dagster gRPC server
 CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "pipeline_personal_finance"]
+
