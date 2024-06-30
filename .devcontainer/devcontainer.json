@@ -2,7 +2,7 @@
 	"name": "Docker Compose Dev Environment",
 	"dockerComposeFile": "../docker-compose.yml",
 	"service": "dagster_webserver",
-	"workspaceFolder": "/app",
+	"workspaceFolder": "/docker/appdata/dagster",
 	"features": {
 		"ghcr.io/devcontainers/features/python:1": {},
 		"ghcr.io/itsmechlark/features/postgresql:1": {}

@@ -13,7 +13,7 @@ services:
       - --port
       - "3000"
       - --workspace
-      - "dagster_home/workspace.yml"
+      - "dagster_home/workspace.yaml"
     environment:
       - DAGSTER_POSTGRES_USER=${POSTGRES_USER}
       - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -75,14 +75,10 @@ services:
       DAGSTER_POSTGRES_IP: postgres
       DAGSTER_POSTGRES_PORT: 5432
     volumes:
-      - .:/docker/appdata/dagster/pipeline_personal_finance
+      - ./pipeline_personal_finance:/docker/appdata/dagster/pipeline_personal_finance
     networks:
       - dagster_network
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+          
 
   dagster_postgres:
     image: postgres:16
@@ -99,7 +95,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /docker/appdata/postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
     networks:
       - dagster_network
 
