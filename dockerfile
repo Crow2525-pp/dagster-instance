@@ -7,17 +7,12 @@ ENV DAGSTER_HOME=/docker/appdata/dagster/dagster_home/
 ENV DAGSTER_APP=/docker/appdata/dagster
 
 
-# Install networking utilities
-RUN apt-get update && apt-get install -y \
-    iputils-ping \
-    dnsutils \
-    net-tools
-
+# RUN rm /var/lib/postgresql/data
 
 # Create application directory
 WORKDIR ${DAGSTER_APP}
 
-COPY requirements.txt pyproject.toml ./
+COPY requirements.txt pyproject.toml .env ./
 
 # Install the required dependencies
 RUN pip install -r requirements.txt

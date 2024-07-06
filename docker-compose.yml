@@ -19,6 +19,7 @@ services:
       - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DAGSTER_POSTGRES_CONN_STR=${POSTGRES_CONN_STR}
       - DAGSTER_POSTGRES_DB=personal_finance
+      - DAGSTER_HOME='docker/appdata/docker/dagster_home/'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
@@ -44,6 +45,8 @@ services:
     entrypoint:
       - dagster-daemon
       - run
+      - --workspace
+      - "dagster_home/workspace.yaml"
     container_name: dagster_daemon
     restart: on-failure
     environment:
@@ -66,16 +69,14 @@ services:
       context: ./pipeline_personal_finance
       dockerfile: dockerfile
     environment:
-      USER_ID: 1000
-      GRP_ID: 1000
       TIMEZONE: Australia/Melbourne
-      DAGSTER_HOME: /docker/appdata/dagster/dagster_home
       DAGSTER_POSTGRES_USER: postgres
       DAGSTER_POSTGRES_PASSWORD: test
       DAGSTER_POSTGRES_IP: postgres
       DAGSTER_POSTGRES_PORT: 5432
     volumes:
       - ./pipeline_personal_finance:/docker/appdata/dagster/pipeline_personal_finance
+      - /tmp/dagster-data:/docker/appdata/dagster/dagster_home/
     networks:
       - dagster_network
           
@@ -89,9 +90,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=personal_finance
-      - PUID=${USER_ID}
-      - PGID=${GRP_ID}
-      - TZ=${TIMEZONE}
     ports:
       - "5432:5432"
     volumes:
