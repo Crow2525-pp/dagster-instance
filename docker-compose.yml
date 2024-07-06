@@ -19,7 +19,7 @@ services:
       - DAGSTER_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DAGSTER_POSTGRES_CONN_STR=${POSTGRES_CONN_STR}
       - DAGSTER_POSTGRES_DB=personal_finance
-      - DAGSTER_HOME='docker/appdata/docker/dagster_home/'
+      - DAGSTER_HOME=/docker/appdata/dagster/dagster_home/
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
@@ -47,6 +47,10 @@ services:
       - run
       - --workspace
       - "dagster_home/workspace.yaml"
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
     container_name: dagster_daemon
     restart: on-failure
     environment:
