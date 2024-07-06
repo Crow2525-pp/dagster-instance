@@ -65,7 +65,7 @@ def convert_qif_to_df(
         # add an ingestion timestamp
         df["ingestion_date"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     else:
-        raise ValueError(f"Datafrmae is empty for {qif_file}")
+        raise ValueError(f"Dataframe is empty for {qif_file}")
 
     return df
 
@@ -94,7 +94,7 @@ def upload_dataframe_to_database(
     verify_schema_sql = f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema}';"
     check_db_sql = "SELECT current_database();"
 
-    with personal_finance_database._db_connection.engine.connect() as conn:
+    with personal_finance_database.create_engine() as conn:
         try:
             # Check the current database name
             context.log.info(f"Executing: {check_db_sql}")
@@ -142,7 +142,7 @@ def upload_dataframe_to_database(
             try:
                 df.to_sql(
                     name=table_name,
-                    con=personal_finance_database._db_connection.engine,
+                    con=personal_finance_database.create_engine(),
                     schema=schema,
                     if_exists="replace",
                     index=False,
