@@ -9,3 +9,6 @@ class SqlAlchemyClientResource(ConfigurableResource):
 
     def create_engine(self):
         return sqlalchemy.create_engine(self.connection_string)
+
+    def get_connection(self):
+        return self.create_engine().connect()

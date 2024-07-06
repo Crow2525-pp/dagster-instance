@@ -94,7 +94,7 @@ def upload_dataframe_to_database(
     verify_schema_sql = f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema}';"
     check_db_sql = "SELECT current_database();"
 
-    with personal_finance_database.create_engine() as conn:
+    with personal_finance_database.get_connection() as conn:
         try:
             # Check the current database name
             context.log.info(f"Executing: {check_db_sql}")
@@ -142,7 +142,7 @@ def upload_dataframe_to_database(
             try:
                 df.to_sql(
                     name=table_name,
-                    con=personal_finance_database.create_engine(),
+                    con=personal_finance_database.get_connection(),
                     schema=schema,
                     if_exists="replace",
                     index=False,
