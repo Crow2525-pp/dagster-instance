@@ -78,6 +78,7 @@ services:
       DAGSTER_POSTGRES_PASSWORD: test
       DAGSTER_POSTGRES_IP: postgres
       DAGSTER_POSTGRES_PORT: 5432
+      DAGSTER_CURRENT_IMAGE: "pipeline_personal_finance"
     volumes:
       - ./pipeline_personal_finance:/docker/appdata/dagster/pipeline_personal_finance
       - /tmp/dagster-data:/docker/appdata/dagster/dagster_home/
