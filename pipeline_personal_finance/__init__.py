@@ -3,7 +3,6 @@ import os
 from dagster import Definitions, EnvVar
 from dotenv import load_dotenv
 
-
 from .resources import SqlAlchemyClientResource
 
 # from dagster_duckdb import DuckDBResource
@@ -26,11 +25,11 @@ resources = {
             connection_string=str(
                 URL.create(
                     drivername="postgresql",
-                    username=EnvVar("POSTGRES_USERNAME"),
-                    password=EnvVar("POSTGRES_PASSWORD"),
-                    host=EnvVar("POSTGRES_HOST"),
-                    port=int(os.environ.get("POSTGRES_PORT")),
-                    database=EnvVar("POSTGRES_DB"),
+                    username=EnvVar("DAGSTER_POSTGRES_USER"),
+                    password=EnvVar("DAGSTER_POSTGRES_PASSWORD"),
+                    host=EnvVar("DAGSTER_POSTGRES_HOST"),
+                    port=int(os.environ.get("DAGSTER_POSTGRES_PORT")),
+                    database=EnvVar("DAGSTER_POSTGRES_DB"),
                 )
             )
         )

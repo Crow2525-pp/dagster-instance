@@ -12,20 +12,18 @@ run_launcher:
   class: DockerRunLauncher
   config:
     env_vars:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      - DAGSTER_POSTGRES_DB
       - DAGSTER_POSTGRES_IP
       - DAGSTER_POSTGRES_PORT
       - DAGSTER_POSTGRES_USER
       - DAGSTER_POSTGRES_PASSWORD
-      - POSTGRES_DB
     network: dagster_network
     container_kwargs:
       volumes: # Make docker client accessible to any launched containers as well
         - /var/run/docker.sock:/var/run/docker.sock
         - /tmp/io_manager_storage:/tmp/io_manager_storage
-        - /tmp/dagster-data:/opt/dagster/dagster_home/storage
+        # - /tmp/dagster-data:/opt/dagster/dagster_home/storage
+
 run_storage:
   module: dagster_postgres.run_storage
   class: PostgresRunStorage
@@ -33,11 +31,11 @@ run_storage:
     postgres_db:
       hostname: dagster_postgres
       username:
-        env: POSTGRES_USER
+        env: DAGSTER_POSTGRES_USER
       password:
-        env: POSTGRES_PASSWORD
+        env: DAGSTER_POSTGRES_PASSWORD
       db_name:
-        env: POSTGRES_DB
+        env: DAGSTER_POSTGRES_DB
       port: 5432
 
 schedule_storage:
@@ -47,11 +45,11 @@ schedule_storage:
     postgres_db:
       hostname: dagster_postgres
       username:
-        env: POSTGRES_USER
+        env: DAGSTER_POSTGRES_USER
       password:
-        env: POSTGRES_PASSWORD
+        env: DAGSTER_POSTGRES_PASSWORD
       db_name:
-        env: POSTGRES_DB
+        env: DAGSTER_POSTGRES_DB
       port: 5432
 
 
@@ -62,11 +60,11 @@ event_log_storage:
     postgres_db:
       hostname: dagster_postgres
       username:
-        env: POSTGRES_USER
+        env: DAGSTER_POSTGRES_USER
       password:
-        env: POSTGRES_PASSWORD
+        env: DAGSTER_POSTGRES_PASSWORD
       db_name:
-        env: POSTGRES_DB
+        env: DAGSTER_POSTGRES_DB
       port: 5432
       
 compute_logs:

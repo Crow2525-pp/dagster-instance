@@ -6,9 +6,10 @@ WORKDIR /docker/appdata/dagster/pipeline_personal_finance
 
 COPY . .
 
+
 # Set correct permissions for files
-RUN chmod 644 *.py *.txt .env dockerfile && \
-    chmod 755 .  # Set directory permission
+RUN chmod 644 .env && \
+    chmod 755 /docker/appdata/dagster/pipeline_personal_finance  # Set directory permission
 
 # Install the required dependencies
 RUN pip install -r requirements.txt
