@@ -47,10 +47,10 @@ services:
       - run
       - --workspace
       - "dagster_home/workspace.yaml"
-    expose:
-      - "4000"
-    ports:
-      - "4000:4000"
+    # expose:
+    #   - "4000"
+    # ports:
+    #   - "4000:4000"
     container_name: dagster_daemon
     restart: on-failure
     environment:
