@@ -7,9 +7,9 @@ WORKDIR /docker/appdata/dagster/pipeline_personal_finance
 COPY . .
 
 
-# Set correct permissions for files
-RUN chmod 644 .env && \
-    chmod 755 /docker/appdata/dagster/pipeline_personal_finance  # Set directory permission
+# # Set correct permissions for files
+# RUN chmod 644 .env && \
+#     chmod 755 /docker/appdata/dagster/pipeline_personal_finance  # Set directory permission
 
 # Install the required dependencies
 RUN pip install -r requirements.txt
@@ -21,7 +21,7 @@ EXPOSE 4000
 WORKDIR /docker/appdata/dagster
 
 # Move the .env file from the pipeline_personal_finance directory to the current directory
-RUN mv pipeline_personal_finance/.env .
+#RUN mv pipeline_personal_finance/.env .
 
 # Keep the container running with a command that does not exit
 # CMD ["tail", "-f", "/dev/null"]

@@ -19,9 +19,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DAGSTER_POSTGRES_USER=${POSTGRES_USER}
-      - DAGSTER_POSTGRES_PASSWORD=${DAGSTER_POSTGRES_PASSWORD}
-      - DAGSTER_POSTGRES_DB=personal_finance
+      DAGSTER_POSTGRES_HOST: ${DAGSTER_POSTGRES_HOST}
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_PORT: ${DAGSTER_POSTGRES_PORT}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
@@ -52,10 +54,11 @@ services:
     container_name: dagster_daemon
     restart: on-failure
     environment:
-      - DAGSTER_POSTGRES_USER=${POSTGRES_USER}
-      - DAGSTER_POSTGRES_PASSWORD=${DAGSTER_POSTGRES_PASSWORD}
-      # - DAGSTER_POSTGRES_CONN_STR=${POSTGRES_CONN_STR}
-      - DAGSTER_POSTGRES_DB=personal_finance
+      DAGSTER_POSTGRES_HOST: ${DAGSTER_POSTGRES_HOST}
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_PORT: ${DAGSTER_POSTGRES_PORT}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
@@ -73,13 +76,14 @@ services:
     image: pipeline_personal_finance
     environment:
       TIMEZONE: Australia/Melbourne
-      DAGSTER_POSTGRES_USER: postgres
-      DAGSTER_POSTGRES_PASSWORD: test
-      DAGSTER_POSTGRES_HOST: dagster_postgres
-      DAGSTER_POSTGRES_PORT: 5432
-      DAGSTER_CURRENT_IMAGE: "pipeline_personal_finance"
+      DAGSTER_CURRENT_IMAGE: pipeline_personal_finance
+      DAGSTER_POSTGRES_HOST: ${DAGSTER_POSTGRES_HOST}
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      DAGSTER_POSTGRES_PORT: ${DAGSTER_POSTGRES_PORT}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
     volumes:
-#      - ./pipeline_personal_finance:/docker/appdata/dagster/pipeline_personal_finance
+    #      - ./pipeline_personal_finance:/docker/appdata/dagster/pipeline_personal_finance
       - /tmp/dagster-data:/docker/appdata/dagster/dagster_home/
     networks:
       - dagster_network
@@ -91,9 +95,10 @@ services:
     restart: always
     container_name: dagster_postgres
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - DAGSTER_POSTGRES_PASSWORD=${DAGSTER_POSTGRES_PASSWORD}
-      - DAGSTER_POSTGRES_DB=personal_finance
+      POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/some_name/
     ports:
       - "5432:5432"
     volumes:
