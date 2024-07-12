@@ -13,7 +13,7 @@ run_launcher:
   config:
     env_vars:
       - DAGSTER_POSTGRES_DB
-      - DAGSTER_POSTGRES_IP
+      - DAGSTER_POSTGRES_HOST
       - DAGSTER_POSTGRES_PORT
       - DAGSTER_POSTGRES_USER
       - DAGSTER_POSTGRES_PASSWORD

@@ -1,7 +1,7 @@
 # pipeline_personal_finance/resources.py
 
 import sqlalchemy
-from dagster import ConfigurableResource
+from dagster import ConfigurableResource, InitResourceContext
 
 
 class SqlAlchemyClientResource(ConfigurableResource):

@@ -1,42 +1,47 @@
+import logging
 import os
-
-from dagster import Definitions, EnvVar
+from dagster import Definitions, EnvVar, get_dagster_logger, resource
 from dotenv import load_dotenv
+from sqlalchemy.engine import URL
 
 from .resources import SqlAlchemyClientResource
-
-# from dagster_duckdb import DuckDBResource
-
 from .assets import upload_dataframe_to_database
 
 load_dotenv()
 
-# from .constants import DBT_PROJECT_DIR
+my_logger = get_dagster_logger()
 
-from sqlalchemy import URL
+# Ensure EnvVar values are properly fetched from the environment variables
+conn_str = URL.create(
+    drivername="postgresql",
+    username=os.environ.get("DAGSTER_POSTGRES_USER"),
+    password=os.environ.get("DAGSTER_POSTGRES_PASSWORD"),
+    host=os.environ.get("DAGSTER_POSTGRES_HOST"),
+    #port=int(os.environ.get("DAGSTER_POSTGRES_PORT")),
+    database=os.environ.get("DAGSTER_POSTGRES_DB"),
+)
+my_logger.info(f"Connection string: {conn_str}")
+
+@resource
+def sqlalchemy_resource(context):
+    connection_string = str(
+        URL.create(
+            drivername="postgresql",
+            username=EnvVar("DAGSTER_POSTGRES_USER"),
+            password=EnvVar("DAGSTER_POSTGRES_PASSWORD"),
+            host=EnvVar("DAGSTER_POSTGRES_HOST"),
+            #port=int(EnvVar("DAGSTER_POSTGRES_PORT")),
+            database=EnvVar("DAGSTER_POSTGRES_DB"),
+        )
+    )
+    context.log.info(f"Initializing SqlAlchemyClientResource with connection string: {connection_string}")
+    return SqlAlchemyClientResource(connection_string=connection_string)
 
 resources = {
-    # "dev": {
-    #     "personal_finance_database": SqlAlchemyClientResource(
-    #         connection_string="duckdb:///duckdb/finance.duckdb"
-    #     ),
     "prod": {
-        "personal_finance_database": SqlAlchemyClientResource(
-            connection_string=str(
-                URL.create(
-                    drivername="postgresql",
-                    username=EnvVar("DAGSTER_POSTGRES_USER"),
-                    password=EnvVar("DAGSTER_POSTGRES_PASSWORD"),
-                    host=EnvVar("DAGSTER_POSTGRES_HOST"),
-                    port=int(os.environ.get("DAGSTER_POSTGRES_PORT")),
-                    database=EnvVar("DAGSTER_POSTGRES_DB"),
-                )
-            )
-        )
+        "personal_finance_database": sqlalchemy_resource,
     },
 }
-# }
-
 
 deployment_name = os.getenv("DAGSTER_DEPLOYMENT", "prod")
 
