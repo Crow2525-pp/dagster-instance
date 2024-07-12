@@ -98,11 +98,11 @@ services:
       POSTGRES_USER: ${DAGSTER_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD}
       POSTGRES_DB: ${DAGSTER_POSTGRES_DB}
-      PGDATA: /var/lib/postgresql/data/some_name/
+      PGDATA: /var/lib/postgresql/data/personal_finance/
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data/
     networks:
       - dagster_network
 

@@ -20,11 +20,29 @@ my_logger.info(f"DAGSTER_POSTGRES_PASSWORD: {os.environ.get('DAGSTER_POSTGRES_PA
 my_logger.info(f"DAGSTER_POSTGRES_PORT: {os.environ.get('DAGSTER_POSTGRES_PORT')}")
 my_logger.info(f"DAGSTER_POSTGRES_DB: {os.environ.get('DAGSTER_POSTGRES_DB')}")
 
+# Ensure EnvVar values are properly fetched from the environment variables
+conn_str = URL.create(
+    drivername="postgresql+psycopg2",
+    username=os.environ.get("DAGSTER_POSTGRES_USER"),
+    password=os.environ.get("DAGSTER_POSTGRES_PASSWORD"),
+    host=os.environ.get("DAGSTER_POSTGRES_HOST"),
+    port=int(os.environ.get("DAGSTER_POSTGRES_PORT")),
+    database=os.environ.get("DAGSTER_POSTGRES_DB"),
+)
+my_logger.info(f"Connection string: {conn_str}")
+
 @resource
 def sqlalchemy_resource(context):
+    drivername: str = "postgresql+psycopg2"
+    
+    def self:
+        self.username = EnvVar("DAGSTER_POSTGRES_USER")
+        self.
+    
+    
     connection_string = str(
         URL.create(
-            drivername="postgresql",
+            drivername="postgresql+psycopg2",
             username=EnvVar("DAGSTER_POSTGRES_USER"),
             password=EnvVar("DAGSTER_POSTGRES_PASSWORD"),
             host=EnvVar("DAGSTER_POSTGRES_HOST"),
